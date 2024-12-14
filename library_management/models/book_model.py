@@ -11,7 +11,7 @@ class Book(Base, IntIdPkMixin):
     """
 
     title: Mapped[str]
-    description: Mapped[str]
+    description: Mapped[str | None]
     author_id: Mapped[int] = mapped_column(ForeignKey("author.id", ondelete="CASCADE"))
     available_amount: Mapped[int]
 
