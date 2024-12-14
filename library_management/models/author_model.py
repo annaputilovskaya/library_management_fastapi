@@ -1,5 +1,7 @@
 from datetime import date
+from typing import Set
 
+from sqlalchemy import UniqueConstraint
 from sqlalchemy.orm import Mapped
 
 from core.base import Base
@@ -14,6 +16,8 @@ class Author(Base, IntIdPkMixin):
     first_name: Mapped[str]
     last_name: Mapped[str]
     born_at: Mapped[date]
+
+    __table_args__ = (UniqueConstraint("first_name", "last_name", "born_at" ),)
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
