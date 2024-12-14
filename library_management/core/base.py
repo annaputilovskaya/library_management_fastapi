@@ -18,6 +18,5 @@ class Base(DeclarativeBase):
     metadata = MetaData(naming_convention=naming_convention)
 
     @declared_attr.directive
-    def __tablename__(cls)  -> str:
+    def __tablename__(cls) -> str:
         return f"{convert_camel_to_snake_case(cls.__name__)}"
-    

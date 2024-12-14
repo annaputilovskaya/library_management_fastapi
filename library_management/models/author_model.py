@@ -19,7 +19,7 @@ class Author(Base, IntIdPkMixin):
 
     books: Mapped[Set["Book"]] = relationship(back_populates="author")
 
-    __table_args__ = (UniqueConstraint("first_name", "last_name", "born_at" ),)
+    __table_args__ = (UniqueConstraint("first_name", "last_name", "born_at"),)
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
