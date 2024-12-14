@@ -3,6 +3,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from core import db_helper
 from crud import author
+from crud.dependencies import author_by_id
+from models.author_model import Author
 from schemas.author_schemas import AuthorReadSchema, AuthorSchema
 
 router = APIRouter(
@@ -29,3 +31,9 @@ async def get_all_authors(
     session: AsyncSession = Depends(db_helper.session_getter),
 ):
     return await author.get_auther_list(session=session)
+
+
+@router.get("/{author_id}", summary="Информация об авторе по id", response_model=AuthorReadSchema)
+async def get_author(author: Author = Depends(author_by_id)):
+    return author
+
