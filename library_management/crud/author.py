@@ -49,3 +49,25 @@ async def get_author(
     Получает автора по его идентификатору.
     """
     return await session.scalar(select(Author).where(Author.id == author_id))
+
+
+async def author_update(
+    session: AsyncSession, author_in: AuthorSchema, author: Author
+) -> Author:
+    """
+    Обновляет информацию об авторе.
+    """
+
+    author_dict = author_in.model_dump()
+    for name, value in author_dict.items():
+        setattr(author, name, value)
+
+    try:
+        await session.commit()
+        return author
+    except IntegrityError:
+        await session.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail={"message": "Author already exists"},
+        )
