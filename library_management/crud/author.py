@@ -9,10 +9,7 @@ from models.author_model import Author
 from schemas.author_schemas import AuthorSchema
 
 
-async def auther_create(
-        session: AsyncSession,
-        author: AuthorSchema
-) -> Author:
+async def auther_create(session: AsyncSession, author: AuthorSchema) -> Author:
     """
     Создает автора.
     """
@@ -31,7 +28,7 @@ async def auther_create(
 
 
 async def get_auther_list(
-        session: AsyncSession,
+    session: AsyncSession,
 ) -> List[Author]:
     """
     Получает список авторов в алфавитном порядке фамилий.
@@ -41,10 +38,7 @@ async def get_auther_list(
     return list(authors)
 
 
-async def get_author(
-        session: AsyncSession,
-        author_id: int
-) -> Author | None:
+async def get_author(session: AsyncSession, author_id: int) -> Author | None:
     """
     Получает автора по его идентификатору.
     """
@@ -71,3 +65,13 @@ async def author_update(
             status_code=status.HTTP_409_CONFLICT,
             detail={"message": "Author already exists"},
         )
+
+
+async def author_delete(session: AsyncSession, author: Author) -> dict[str:str]:
+    """
+    Удаляет автора.
+    """
+
+    await session.delete(author)
+    await session.commit()
+    return {"detail": "Author deleted."}
