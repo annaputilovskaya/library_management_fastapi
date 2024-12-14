@@ -40,3 +40,12 @@ async def get_auther_list(
     authors = await session.scalars(stmt)
     return list(authors)
 
+
+async def get_author(
+        session: AsyncSession,
+        author_id: int
+) -> Author | None:
+    """
+    Получает автора по его идентификатору.
+    """
+    return await session.scalar(select(Author).where(Author.id == author_id))
