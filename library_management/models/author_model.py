@@ -2,7 +2,7 @@ from datetime import date
 from typing import Set
 
 from sqlalchemy import UniqueConstraint
-from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import Mapped, relationship
 
 from core.base import Base
 from models.mixins.int_id_pk import IntIdPkMixin
@@ -16,6 +16,8 @@ class Author(Base, IntIdPkMixin):
     first_name: Mapped[str]
     last_name: Mapped[str]
     born_at: Mapped[date]
+
+    books: Mapped[Set["Book"]] = relationship(back_populates="author")
 
     __table_args__ = (UniqueConstraint("first_name", "last_name", "born_at" ),)
 

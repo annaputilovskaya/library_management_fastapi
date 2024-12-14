@@ -2,7 +2,6 @@ from sqlalchemy import ForeignKey, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from core.base import Base
-from models.author_model import Author
 from models.mixins.int_id_pk import IntIdPkMixin
 
 
