@@ -5,6 +5,7 @@ from core.config import settings
 from core.database import db_helper
 from fastapi import FastAPI
 
+from routers.author_router import router as author_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -15,6 +16,7 @@ async def lifespan(app: FastAPI):
 
 
 main_app = FastAPI(title="Управление библиотекой", lifespan=lifespan)
+main_app.include_router(author_router)
 
 if __name__ == "__main__":
     uvicorn.run(
