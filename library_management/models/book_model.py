@@ -1,7 +1,8 @@
-from sqlalchemy import ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import ForeignKey, UniqueConstraint
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from core.base import Base
+from models.author_model import Author
 from models.mixins.int_id_pk import IntIdPkMixin
 
 
@@ -14,6 +15,10 @@ class Book(Base, IntIdPkMixin):
     description: Mapped[str | None]
     author_id: Mapped[int] = mapped_column(ForeignKey("author.id", ondelete="CASCADE"))
     available_amount: Mapped[int]
+
+    author: Mapped["Author"] = relationship(back_populates="books")
+
+    __table_args__ = (UniqueConstraint("title", "author_id"),)
 
     def __str__(self):
         return f"{self.title}"
