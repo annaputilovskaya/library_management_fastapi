@@ -48,3 +48,25 @@ async def get_book(session: AsyncSession, book_id: int) -> Book | None:
     """
 
     return await session.scalar(select(Book).where(Book.id == book_id))
+
+
+async def book_update(
+    session: AsyncSession, book_in: BookSchema, book: Book
+) -> Book:
+    """
+    Обновляет информацию о книге.
+    """
+
+    book_dict = book_in.model_dump()
+    for name, value in book_dict.items():
+        setattr(book, name, value)
+
+    try:
+        await session.commit()
+        return book
+    except IntegrityError:
+        await session.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail={"message": f"Book already exists or author {book.author_id} not found!"},
+        )
