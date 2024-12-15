@@ -5,7 +5,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from core import db_helper
 from crud.author import get_author
+from crud.book import get_book
 from models.author_model import Author
+from models.book_model import Book
 
 
 async def author_by_id(
@@ -13,7 +15,7 @@ async def author_by_id(
     session: AsyncSession = Depends(db_helper.session_getter),
 ) -> Author:
     """
-    Получение заметки по ее идентификатору.
+    Получение автора по его идентификатору.
     """
 
     author = await get_author(session=session, author_id=author_id)
@@ -24,3 +26,34 @@ async def author_by_id(
         status_code=status.HTTP_404_NOT_FOUND,
         detail=f"Author {author_id} not found!",
     )
+
+
+async def book_by_id(
+    book_id: Annotated[int, Path],
+    session: AsyncSession = Depends(db_helper.session_getter),
+) -> Book:
+    """
+    Получение книги по его идентификатору.
+    """
+
+    book = await get_book(session=session, book_id=book_id)
+    if book is not None:
+        return book
+
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail=f"Book {book_id} not found!",
+    )
+
+
+# async def book_by_title_and_author(
+#     book_title: str,
+#     book_author: int,
+#     session: AsyncSession = Depends(db_helper.session_getter),
+# ) -> Book | None:
+#     """
+#     Получение книги по названию и идентификатору автора.
+#     """
+#
+#     stmt = select(Book).where(Book.title == book_title, Book.author_id == book_author)
+#     return await session.scalar(stmt)
