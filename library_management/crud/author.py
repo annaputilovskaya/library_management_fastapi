@@ -9,11 +9,15 @@ from models.author_model import Author
 from schemas.author_schemas import AuthorSchema
 
 
-async def auther_create(session: AsyncSession, author: AuthorSchema) -> Author:
+async def author_create(session: AsyncSession, author: AuthorSchema) -> Author:
     """
     Создает автора.
     """
-    new_author = Author(**author.model_dump())
+    new_author = Author(
+        first_name=author.first_name.title(),
+        last_name=author.last_name.title(),
+        born_at=author.born_at,
+    )
     session.add(new_author)
     try:
         await session.commit()
@@ -27,7 +31,7 @@ async def auther_create(session: AsyncSession, author: AuthorSchema) -> Author:
         )
 
 
-async def get_auther_list(
+async def get_author_list(
     session: AsyncSession,
 ) -> List[Author]:
     """
@@ -53,6 +57,8 @@ async def author_update(
     """
 
     author_dict = author_in.model_dump()
+    author_dict["first_name"] = author_dict["first_name"].title()
+    author_dict["last_name"] = author_dict["last_name"].title()
     for name, value in author_dict.items():
         setattr(author, name, value)
 
@@ -67,7 +73,7 @@ async def author_update(
         )
 
 
-async def author_delete(session: AsyncSession, author: Author) -> dict[str:str]:
+async def author_delete(session: AsyncSession, author: Author) -> dict[str, str]:
     """
     Удаляет автора.
     """
