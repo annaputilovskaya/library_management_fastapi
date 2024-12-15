@@ -1,6 +1,7 @@
-from typing import List, Annotated
+from datetime import date
+from typing import Annotated, List
 
-from fastapi import HTTPException, status, Path, Depends
+from fastapi import Depends, HTTPException, Path, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -46,9 +47,9 @@ async def get_borrow_list(
 
 
 async def get_borrow_by_id(
-        borrow_id: Annotated[int, Path],
-        session: AsyncSession = Depends(db_helper.session_getter),
-)-> Borrow | None:
+    borrow_id: Annotated[int, Path],
+    session: AsyncSession = Depends(db_helper.session_getter),
+) -> Borrow | None:
     """
     Получает информацию о выдаче по ее идентификатору.
     """
@@ -61,3 +62,24 @@ async def get_borrow_by_id(
         status_code=status.HTTP_404_NOT_FOUND,
         detail=f"Borrow {borrow_id} not found!",
     )
+
+
+async def borrow_update(session: AsyncSession, borrow: Borrow) -> Borrow:
+    """
+    Обновление информации о выдаче.
+    """
+
+    if not borrow.returned_at:
+        book = await book_by_id(book_id=borrow.book_id, session=session)
+        book.available_amount += 1
+        borrow.returned_at = date.today()
+
+        await session.commit()
+        await session.refresh(borrow)
+        return borrow
+
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail={"message": "Book already returned"},
+        )
