@@ -27,3 +27,11 @@ class FinishedBorrowSchema(UnfinishedBorrowSchema):
     """
 
     returned_at: date = Field(title= "Дата возврата")
+
+
+class BorrowReadSchema(UnfinishedBorrowSchema):
+    """
+    Схема просмотра выдачи.
+    """
+
+    returned_at: date | None
