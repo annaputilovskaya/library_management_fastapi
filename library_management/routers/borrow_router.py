@@ -1,10 +1,13 @@
-from fastapi import APIRouter, status, Depends
+from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from core import db_helper
-from crud.borrow import borrow_create, get_borrow_list, get_borrow_by_id
+from crud.borrow import (borrow_create, borrow_update, get_borrow_by_id,
+                         get_borrow_list)
 from models.borrow_model import Borrow
-from schemas.borrow_schemas import UnfinishedBorrowSchema, BorrowSchema, FinishedBorrowSchema, BorrowReadSchema
+from schemas.borrow_schemas import (BorrowReadSchema, BorrowSchema,
+                                    FinishedBorrowSchema,
+                                    UnfinishedBorrowSchema)
 
 router = APIRouter(
     prefix="/borrows",
@@ -39,3 +42,15 @@ async def get_all_borrows(
 )
 async def get_borrow(borrow: Borrow = Depends(get_borrow_by_id)):
     return borrow
+
+
+@router.patch(
+    "/{borrow_id}/return",
+    summary="Обновление информации о книге",
+    response_model=FinishedBorrowSchema,
+)
+async def update_borrow(
+    borrow: Borrow = Depends(get_borrow_by_id),
+    session: AsyncSession = Depends(db_helper.session_getter),
+):
+    return await borrow_update(session=session, borrow=borrow)
