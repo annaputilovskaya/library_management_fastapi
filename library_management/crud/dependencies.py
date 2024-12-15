@@ -33,7 +33,7 @@ async def book_by_id(
     session: AsyncSession = Depends(db_helper.session_getter),
 ) -> Book:
     """
-    Получение книги по его идентификатору.
+    Получение книги по ее идентификатору.
     """
 
     book = await get_book(session=session, book_id=book_id)
@@ -44,16 +44,3 @@ async def book_by_id(
         status_code=status.HTTP_404_NOT_FOUND,
         detail=f"Book {book_id} not found!",
     )
-
-
-# async def book_by_title_and_author(
-#     book_title: str,
-#     book_author: int,
-#     session: AsyncSession = Depends(db_helper.session_getter),
-# ) -> Book | None:
-#     """
-#     Получение книги по названию и идентификатору автора.
-#     """
-#
-#     stmt = select(Book).where(Book.title == book_title, Book.author_id == book_author)
-#     return await session.scalar(stmt)
