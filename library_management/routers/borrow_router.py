@@ -2,8 +2,8 @@ from fastapi import APIRouter, status, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from core import db_helper
-from crud.borrow import borrow_create
-from schemas.borrow_schemas import UnfinishedBorrowSchema, BorrowSchema
+from crud.borrow import borrow_create, get_borrow_list
+from schemas.borrow_schemas import UnfinishedBorrowSchema, BorrowSchema, FinishedBorrowSchema, BorrowReadSchema
 
 router = APIRouter(
     prefix="/borrows",
@@ -22,3 +22,11 @@ async def add_borrow(
     session: AsyncSession = Depends(db_helper.session_getter),
 ):
     return await borrow_create(borrow=borrow, session=session)
+
+
+@router.get("", summary="Список всех выдач", response_model=list[BorrowReadSchema])
+async def get_all_borrows(
+    session: AsyncSession = Depends(db_helper.session_getter),
+):
+    return await get_borrow_list(session=session)
+
