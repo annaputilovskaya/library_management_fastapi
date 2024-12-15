@@ -1,4 +1,7 @@
+from typing import List
+
 from fastapi import HTTPException, status
+from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -25,3 +28,23 @@ async def book_create(session: AsyncSession, book: BookSchema) -> Book:
                 "message": f"Book already exists or author {book.author_id} not found!"
             },
         )
+
+
+async def get_book_list(
+    session: AsyncSession,
+) -> List[Book]:
+    """
+    Получает список книг в алфавитном порядке названий.
+    """
+
+    stmt = select(Book).order_by(Book.title)
+    books = await session.scalars(stmt)
+    return list(books)
+
+
+async def get_book(session: AsyncSession, book_id: int) -> Book | None:
+    """
+    Получает книгу по ее идентификатору.
+    """
+
+    return await session.scalar(select(Book).where(Book.id == book_id))
