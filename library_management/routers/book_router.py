@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from core import db_helper
-from crud.book import book_create, get_book_list, book_update
+from crud.book import book_create, book_delete, book_update, get_book_list
 from crud.dependencies import book_by_id
 from models.book_model import Book
 from schemas.book_schemas import BookReadSchema, BookSchema
@@ -53,3 +53,13 @@ async def update_book(
     session: AsyncSession = Depends(db_helper.session_getter),
 ):
     return await book_update(session=session, book=book, book_in=book_in)
+
+
+@router.delete(
+    "/{book_id}", summary="Удаление книги", status_code=status.HTTP_204_NO_CONTENT
+)
+async def delete_book(
+    book: Book = Depends(book_by_id),
+    session: AsyncSession = Depends(db_helper.session_getter),
+):
+    return await book_delete(session=session, book=book)
