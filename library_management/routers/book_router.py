@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from core import db_helper
-from crud.book import book_create, get_book_list
+from crud.book import book_create, get_book_list, book_update
 from crud.dependencies import book_by_id
 from models.book_model import Book
 from schemas.book_schemas import BookReadSchema, BookSchema
@@ -40,3 +40,16 @@ async def get_all_books(
 )
 async def get_book(book: Book = Depends(book_by_id)):
     return book
+
+
+@router.put(
+    "/{book_id}",
+    summary="Обновление информации о книге",
+    response_model=BookReadSchema,
+)
+async def update_book(
+    book_in: BookSchema,
+    book: Book = Depends(book_by_id),
+    session: AsyncSession = Depends(db_helper.session_getter),
+):
+    return await book_update(session=session, book=book, book_in=book_in)
