@@ -1,4 +1,7 @@
+from typing import List
+
 from fastapi import HTTPException, status
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from crud.dependencies import book_by_id
@@ -27,3 +30,16 @@ async def borrow_create(session: AsyncSession, borrow: BorrowSchema) -> Borrow:
             status_code=status.HTTP_406_NOT_ACCEPTABLE,
             detail={"message": "No books available"},
         )
+
+
+async def get_borrow_list(
+    session: AsyncSession,
+) -> List[Borrow]:
+    """
+    Получает список всех выдач.
+    """
+
+    stmt = select(Borrow).order_by(Borrow.id)
+    borrows = await session.scalars(stmt)
+    return list(borrows)
+
