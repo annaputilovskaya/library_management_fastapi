@@ -13,7 +13,7 @@ class Book(Base, IntIdPkMixin):
     title: Mapped[str]
     description: Mapped[str | None]
     author_id: Mapped[int] = mapped_column(ForeignKey("author.id", ondelete="CASCADE"))
-    available_amount: Mapped[int]
+    available_amount: Mapped[int] = mapped_column(default=1)
 
     author: Mapped["Author"] = relationship(back_populates="books")
 
