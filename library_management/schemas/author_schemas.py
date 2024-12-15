@@ -10,7 +10,7 @@ class AuthorSchema(BaseModel):
 
     first_name: str = Field(title="Имя", max_length=50)
     last_name: str = Field(title="Фамилия", max_length=50)
-    born_at: date = Field(title="Дата рождения")
+    born_at: date = Field(title="Дата рождения", lt=date.today())
 
 
 class AuthorReadSchema(AuthorSchema):
