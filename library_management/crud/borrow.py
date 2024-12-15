@@ -1,9 +1,10 @@
-from typing import List
+from typing import List, Annotated
 
-from fastapi import HTTPException, status
+from fastapi import HTTPException, status, Path, Depends
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from core import db_helper
 from crud.dependencies import book_by_id
 from models.borrow_model import Borrow
 from schemas.borrow_schemas import BorrowSchema
@@ -43,3 +44,20 @@ async def get_borrow_list(
     borrows = await session.scalars(stmt)
     return list(borrows)
 
+
+async def get_borrow_by_id(
+        borrow_id: Annotated[int, Path],
+        session: AsyncSession = Depends(db_helper.session_getter),
+)-> Borrow | None:
+    """
+    Получает информацию о выдаче по ее идентификатору.
+    """
+
+    borrow = await session.scalar(select(Borrow).where(Borrow.id == borrow_id))
+    if borrow is not None:
+        return borrow
+
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail=f"Borrow {borrow_id} not found!",
+    )
