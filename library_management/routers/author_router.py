@@ -2,8 +2,8 @@ from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from core import db_helper
-from crud.author import (auther_create, author_delete, author_update,
-                         get_auther_list)
+from crud.author import (author_create, author_delete, author_update,
+                         get_author_list)
 from crud.dependencies import author_by_id
 from models.author_model import Author
 from schemas.author_schemas import AuthorReadSchema, AuthorSchema
@@ -24,14 +24,14 @@ async def add_author(
     author: AuthorSchema,
     session: AsyncSession = Depends(db_helper.session_getter),
 ):
-    return await auther_create(session=session, author=author)
+    return await author_create(session=session, author=author)
 
 
 @router.get("", summary="Список авторов", response_model=list[AuthorReadSchema])
 async def get_all_authors(
     session: AsyncSession = Depends(db_helper.session_getter),
 ):
-    return await get_auther_list(session=session)
+    return await get_author_list(session=session)
 
 
 @router.get(
