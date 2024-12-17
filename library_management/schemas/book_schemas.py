@@ -3,7 +3,7 @@ from pydantic import BaseModel, Field, NonNegativeInt
 
 class BookSchema(BaseModel):
     """
-    Базовая схема книга.
+    Базовая схема книги.
     """
 
     title: str = Field(title="Название", max_length=100)
