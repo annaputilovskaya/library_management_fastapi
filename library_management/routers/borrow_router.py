@@ -46,7 +46,7 @@ async def get_borrow(borrow: Borrow = Depends(get_borrow_by_id)):
 
 @router.patch(
     "/{borrow_id}/return",
-    summary="Обновление информации о книге",
+    summary="Завершение выдачи (возврат книги)",
     response_model=FinishedBorrowSchema,
 )
 async def update_borrow(
