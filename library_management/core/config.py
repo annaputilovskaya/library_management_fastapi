@@ -15,14 +15,14 @@ class RunConfig(BaseModel):
 
 
 class DatabaseConfig(BaseModel):
-    DB_ENGINE: str = config("DB_ENGINE")
-    DB_USER: str = config("DB_USER")
-    DB_PASSWORD: str = config("DB_PASSWORD")
-    DB_HOST: str = config("DB_HOST")
-    DB_PORT: str = config("DB_PORT")
-    DB_NAME: str = config("DB_NAME")
+    DB_ENGINE: str = config("POSTGRES_ENGINE")
+    DB_USER: str = config("POSTGRES_NAME")
+    DB_PASSWORD: str = config("POSTGRES_PASSWORD")
+    DB_HOST: str = config("POSTGRES_HOST")
+    DB_PORT: str = config("POSTGRES_PORT")
+    DB_NAME: str = config("POSTGRES_NAME")
     url: str = f"{DB_ENGINE}://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-    echo: bool = bool(int(config("DB_ECHO")))
+    echo: bool = bool(int(config("POSTGRES_ECHO")))
     echo_pool: bool = False
     pool_size: int = 50
     max_overflow: int = 10
