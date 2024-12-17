@@ -6,7 +6,7 @@ from starlette.config import Config
 
 BASE_DIR = Path(__file__).parent.parent
 
-config = Config(".env")
+config = Config("../.env")
 
 
 class RunConfig(BaseModel):
