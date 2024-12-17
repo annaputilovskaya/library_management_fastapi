@@ -66,7 +66,7 @@ async def get_borrow_by_id(
 
 async def borrow_update(session: AsyncSession, borrow: Borrow) -> Borrow:
     """
-    Обновление информации о выдаче.
+    Обновляет информацию о выдаче.
     """
 
     if not borrow.returned_at:
