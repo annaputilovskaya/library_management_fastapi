@@ -16,11 +16,11 @@ class RunConfig(BaseModel):
 
 class DatabaseConfig(BaseModel):
     DB_ENGINE: str = config("POSTGRES_ENGINE")
-    DB_USER: str = config("POSTGRES_NAME")
+    DB_USER: str = config("POSTGRES_USER")
     DB_PASSWORD: str = config("POSTGRES_PASSWORD")
     DB_HOST: str = config("POSTGRES_HOST")
     DB_PORT: str = config("POSTGRES_PORT")
-    DB_NAME: str = config("POSTGRES_NAME")
+    DB_NAME: str = config("POSTGRES_DB")
     url: str = f"{DB_ENGINE}://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
     echo: bool = bool(int(config("POSTGRES_ECHO")))
     echo_pool: bool = False
